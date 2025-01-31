@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odds Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex justify-center items-center h-screen">
+
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+        <h1 class="text-xl font-bold text-center mb-4">No-Vig Odds Calculator</h1>
+
+        <form method="POST" class="space-y-4">
+            <div>
+                <label for="odds_a" class="block text-gray-400">Odds for Prop A:</label>
+                <input type="text" name="odds_a" id="odds_a" placeholder="-110"
+                    value="{{ request.form.get('odds_a', odds_a if odds_a else '') }}"
+                    class="w-full p-2 bg-gray-700 rounded text-white text-center border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label for="odds_b" class="block text-gray-400">Odds for Prop B:</label>
+                <input type="text" name="odds_b" id="odds_b" placeholder="-110"
+                    value="{{ request.form.get('odds_b', odds_b if odds_b else '') }}"
+                    class="w-full p-2 bg-gray-700 rounded text-white text-center border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition">
+                Calculate
+            </button>
+        </form>
+
+        {% if result %}
+            {% if result.error %}
+                <p class="text-red-500 text-center mt-4">{{ result.error }}</p>
+            {% else %}
+                <div class="mt-4">
+                    <h2 class="text-lg font-semibold text-center">Results</h2>
+                    <table class="w-full mt-2 border-collapse">
+                        <thead>
+                            <tr class="text-gray-400">
+                                <th class="p-2">No-Vig %</th>
+                                <th class="p-2">No-Vig Odds</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-t border-gray-700">
+                                <td class="p-2 text-center">{% if result.fairProb1 is not none %}{{ (result.fairProb1 * 100)|round(2) }}%{% endif %}</td>
+                                <td class="p-2 text-center">{% if result.fairAmerican1 is not none %}{% if result.fairAmerican1 >= 0 %}+{% endif %}{{ result.fairAmerican1|round(0) }}{% endif %}</td>
+                            </tr>
+                            <tr class="border-t border-gray-700">
+                                <td class="p-2 text-center">{% if result.fairProb2 is not none %}{{ (result.fairProb2 * 100)|round(2) }}%{% endif %}</td>
+                                <td class="p-2 text-center">{% if result.fairAmerican2 is not none %}{% if result.fairAmerican2 >= 0 %}+{% endif %}{{ result.fairAmerican2|round(0) }}{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
