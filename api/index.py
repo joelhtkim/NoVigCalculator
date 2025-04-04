@@ -40,5 +40,11 @@ def index():
 
     return render_template('index.html', result=result, odds_a=odds_a, odds_b=odds_b)
 
+# VERCEL
+app.config['ENV'] = 'production'
+
+# FLASK
+"""
 if __name__ == '__main__':
     app.run(debug=True)
+"""
